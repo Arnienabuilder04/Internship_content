@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>demo_blur_effect</title>
+    <style>
+    html {
+        width: 100vw;
+        height: 100vh;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+        align-items: center;
+        height: 100vh;
+        width: 100vw;
+        font-family: 'Inter', sans-serif;
+        font-size: 56px;
+        font-weight: 300;
+        margin: 0;
+        padding: 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Text elements */
+    .text {
+        text-align: center;
+        width: 50vw;
+        position: relative;
+        z-index: 1;
+    }
+    .text:hover {
+        cursor: pointer;
+    }
+
+    /* TEXT FOUR */
+    .text_four {
+        overflow: hidden;
+    }
+
+    .text__four__container {
+        overflow: hidden;
+    }
+
+    .blur-overlay__four {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 1000px;
+        height: 1000px;
+        z-index: 1;
+        border-radius: 50%;
+        
+        -webkit-mask-image: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 50%);
+        mask-image: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 10%);
+        
+        backdrop-filter: blur(2px);
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.2s ease-in-out;
+    }
+
+    label{
+        font-size: 1.5rem;
+    }
+    /* Sliders for controls */
+    .sliders-container {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+
+    /* Text input for editable text */
+    .text-input-container {
+        background: white;
+        padding: 10px;
+        border-radius: 10px;
+        width: auto;
+    }
+    .text-input-container input {
+        font-size: 20px;
+        width: 300px;
+    }
+    nav{
+    font-size: 2rem;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    z-index: 2;
+    padding: 1rem;
+    background-color: rgb(154, 154, 154);
+    display: flex;
+}
+
+nav>ul{
+    display: flex;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    
+}
+nav>ul>li>a{
+    text-decoration: none;
+    color: white;
+    padding: 1rem;
+    
+}
+nav>ul>li{
+    transition: 0.5s scale ease;
+}
+
+nav>ul>li:hover{
+
+    scale: 1.2;
+}
+
+</style>
+<nav>
+    <ul>
+        <li><a href="./index_text.html">text</a></li>
+        <li><a href="./index_images.html">images</a></li>
+        <li><a href="./index_text_detail.html">custom</a></li>
+    </ul>
+</nav>
+   
+
+    <div class="sliders-container">
+        <div class="text-input-container">
+            <label for="text-input">Edit Text:</label><br>
+            <input type="text" id="text-input" value="What we do">
+        </div>
+
+        <label for="blur-slider">Backdrop Blur: <span id="blur-value">2px</span></label>
+        <input type="range" id="blur-slider" class="slider" min="0" max="30" value="2"><br>
+        
+        <label for="transition-slider">Transition Speed: <span id="transition-value">0.2s</span></label>
+        <input type="range" id="transition-slider" class="slider" min="0.1" max="2" step="0.1" value="0.2"><br>
+        
+        <label for="gradient-slider">Gradient End Point: <span id="gradient-value">10%</span></label>
+        <input type="range" id="gradient-slider" class="slider" min="0" max="100" value="10"><br>
+
+        <label for="gradient-stop-slider">Gradient Stop Point: <span id="gradient-stop-value">50%</span></label>
+        <input type="range" id="gradient-stop-slider" class="slider" min="0" max="100" value="50"><br>
+
+        <label for="ease-select">Transition Easing:</label>
+        <select id="ease-select">
+            <option value="ease-in-out">Ease-in-out</option>
+            <option value="ease-in">Ease-in</option>
+            <option value="ease-out">Ease-out</option>
+            <option value="linear">Linear</option>
+        </select>
+    </div>
+    <div class="text__four__container">
+        <p class="text text_four">
+            <span id="editable-text">What we do</span>
+            <div class="blur-overlay__four"></div> 
+        </p>
+    </div>
+   
+
+    <script>
+    /* TEXT FOUR */
+    const blurOverlayFour = document.querySelector('.blur-overlay__four');
+    const textFour = document.querySelector('.text_four');
+    const editableText = document.getElementById('editable-text');
+    const textInput = document.getElementById('text-input');
+
+    const blurSlider = document.getElementById('blur-slider');
+    const transitionSlider = document.getElementById('transition-slider');
+    const gradientSlider = document.getElementById('gradient-slider');
+    const gradientStopSlider = document.getElementById('gradient-stop-slider');
+    const easeSelect = document.getElementById('ease-select');
+
+    const blurValueDisplay = document.getElementById('blur-value');
+    const transitionValueDisplay = document.getElementById('transition-value');
+    const gradientValueDisplay = document.getElementById('gradient-value');
+    const gradientStopValueDisplay = document.getElementById('gradient-stop-value');
+
+    // Update values when sliders are changed
+    blurSlider.addEventListener('input', () => {
+        const blurValue = blurSlider.value;
+        blurValueDisplay.textContent = `${blurValue}px`;
+        blurOverlayFour.style.backdropFilter = `blur(${blurValue}px)`;
+    });
+
+    transitionSlider.addEventListener('input', () => {
+        const transitionSpeed = transitionSlider.value;
+        transitionValueDisplay.textContent = `${transitionSpeed}s`;
+        blurOverlayFour.style.transition = `opacity ${transitionSpeed}s ${easeSelect.value}`;
+    });
+
+    gradientSlider.addEventListener('input', () => {
+        const gradientEnd = gradientSlider.value;
+        gradientValueDisplay.textContent = `${gradientEnd}%`;
+        blurOverlayFour.style.maskImage = `radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0) ${gradientEnd}%)`;
+    });
+
+    gradientStopSlider.addEventListener('input', () => {
+        const gradientStop = gradientStopSlider.value;
+        gradientStopValueDisplay.textContent = `${gradientStop}%`;
+        blurOverlayFour.style.maskImage = `radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0) ${gradientStop}%)`;
+    });
+
+    easeSelect.addEventListener('change', () => {
+        const transitionSpeed = transitionSlider.value;
+        blurOverlayFour.style.transition = `opacity ${transitionSpeed}s ${easeSelect.value}`;
+    });
+
+    // Edit Text Input
+    textInput.addEventListener('input', () => {
+        editableText.textContent = textInput.value;
+    });
+
+    /* Mouse events for the blur effect */
+    textFour.addEventListener('mouseenter', () => {
+        blurOverlayFour.style.opacity = '1';
+    });
+
+    textFour.addEventListener('mouseleave', () => {
+        blurOverlayFour.style.opacity = '0'; 
+    });
+
+    textFour.addEventListener('mousemove', (e) => {
+        const x = e.clientX - 500; 
+        const y = e.clientY - 500;
+        blurOverlayFour.style.transform = `translate(${x}px, ${y}px)`;
+    });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>demo_blur_effect</title>
+</head>
+<style>
+ html{
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    
+
+ }
+ body {
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 2rem;
+    justify-items: center;
+    align-content: center;
+    
+    height: 100vh;
+    width: 100vw;
+    font-family: 'Inter', sans-serif;
+    font-size: 56px;
+    font-weight: 300;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Text elements */
+.text {
+    text-align: center;
+    max-width: 15vw;
+    position: relative;
+    z-index: 1;
+    max-height: auto;
+}
+.text:hover {
+    cursor: pointer;
+}
+
+/* TEXT ONE */
+
+.text__one__container {
+    align-self: center;
+
+    max-height: fit-content;
+    overflow: hidden;
+    padding: 1rem;
+
+}
+.text_one {
+    transition: filter 0.5s ease;
+}
+.text_one:hover {
+    filter: blur(1px);
+}
+
+/* TEXT TWO */
+.text_two {
+    overflow: hidden; 
+}
+
+.text__two__container {
+    align-self: center;
+
+    max-height: fit-content;
+    overflow: hidden;
+    padding: 1rem;
+
+}
+
+/* Blur overlay */
+.blur-overlay__two {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 150px;  
+    height: 150px;
+    z-index: 1;
+    border-radius: 50%;
+    backdrop-filter: blur(5px);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+}
+
+/*TEXT FOUR*/
+.text_four {
+    overflow: hidden; 
+}
+
+.text__four__container {
+    align-self: center;
+
+    overflow: hidden;
+    padding: 1rem;
+
+    
+}
+
+.blur-overlay__four {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1000px;
+    height: 1000px;
+    z-index: 1;
+    border-radius: 50%;
+    
+    -webkit-mask-image: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 50%);
+    mask-image: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 10%);
+    
+    backdrop-filter: blur(2px);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+}
+
+/*TEXT FOIVE*/
+.text__five__container {
+    align-self: center;
+
+    overflow: hidden; 
+    position: relative; 
+    padding: 1rem;
+}
+
+.blur-overlay__five {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1500px;
+    height: 1500px;
+    z-index: 1;
+    border-radius: 50%;
+    
+
+    -webkit-mask-image: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 50%);
+    mask-image: radial-gradient(circle, rgba(255,255,255,0) 2%, rgba(255,255,255,1) 10%);
+    
+    backdrop-filter: blur(5px);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+}
+
+/*TEXT SIX*/
+.text_six {
+    overflow: hidden; 
+}
+
+.text__six__container {
+    align-self: center;
+
+    overflow: hidden;
+    padding: 1rem;
+
+}
+
+.blur-overlay__six {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1000px;
+    height: 1000px;
+    z-index: 1;
+    border-radius: 50%;
+    
+    -webkit-mask-image: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 50%);
+    mask-image: radial-gradient(circle, rgba(255,255,255,1) 5%, rgba(255,255,255,0) 20%);
+    
+    backdrop-filter: blur(20px);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+}
+nav{
+    font-size: 2rem;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    z-index: 2;
+    padding: 1rem;
+    background-color: rgb(154, 154, 154);
+    display: flex;
+}
+
+nav>ul{
+    display: flex;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    
+}
+nav>ul>li>a{
+    text-decoration: none;
+    color: white;
+    padding: 1rem;
+    
+}
+nav>ul>li{
+    transition: 0.5s scale ease;
+}
+
+nav>ul>li:hover{
+
+    scale: 1.2;
+}
+
+</style>
+<nav>
+    <ul>
+        <li><a href="./index_text.html">text</a></li>
+        <li><a href="#">images</a></li>
+        <li><a href="./index_text_detail.html">custom</a></li>
+    </ul>
+</nav>
+<body>
+   
+    <div class="text__one__container">
+        <img class="text text_one" src="./assets/img_2.jpg"></img>
+        </img>
+    </div>
+
+    <div class="text__two__container">
+        <img class="text text_two" src="./assets/img_2.jpg">
+            <div class="blur-overlay__two"></div> 
+        </img>
+    </div>
+
+    <div class="text__four__container">
+        <img class="text text_four" src="./assets/img_2.jpg">
+            <div class="blur-overlay__four"></div> 
+        </img>
+    </div>
+
+    <div class="text__five__container">
+        <img class="text text_five" src="./assets/img_2.jpg">
+            <div class="blur-overlay__five"></div> 
+        </img>
+    </div>
+
+    <div class="text__six__container">
+        <img class="text text_six" src="./assets/img_2.jpg">
+            <div class="blur-overlay__six"></div> 
+        </img>
+    </div>
+
+    
+</body>
+<script>
+/*TEXT TWO*/
+
+const blurOverlayTwo = document.querySelector('.blur-overlay__two');
+const textTwo = document.querySelector('.text_two');
+
+textTwo.addEventListener('mouseenter', () => {
+    blurOverlayTwo.style.opacity = '1';
+});
+
+textTwo.addEventListener('mouseleave', () => {
+    blurOverlayTwo.style.opacity = '0'; 
+});
+
+textTwo.addEventListener('mousemove', (e) => {
+    const x = e.clientX - 75; 
+    const y = e.clientY - 75;
+    blurOverlayTwo.style.transform = `translate(${x}px, ${y}px)`;
+});
+
+/*TEXT FOUR*/
+
+const blurOverlayFour = document.querySelector('.blur-overlay__four');
+const textFour = document.querySelector('.text_four');
+
+textFour.addEventListener('mouseenter', () => {
+    blurOverlayFour.style.opacity = '1';
+});
+
+textFour.addEventListener('mouseleave', () => {
+    blurOverlayFour.style.opacity = '0'; 
+});
+
+textFour.addEventListener('mousemove', (e) => {
+    const x = e.clientX - 500; 
+    const y = e.clientY -500;
+    blurOverlayFour.style.transform = `translate(${x}px, ${y}px)`;
+});
+
+/*TEXT FIVE*/
+
+const blurOverlayFive = document.querySelector('.blur-overlay__five');
+const textFive = document.querySelector('.text_five');
+
+textFive.addEventListener('mouseenter', () => {
+    blurOverlayFive.style.opacity = '1';
+});
+
+textFive.addEventListener('mouseleave', () => {
+    blurOverlayFive.style.opacity = '0'; 
+});
+
+textFive.addEventListener('mousemove', (e) => {
+    const rect = textFive.getBoundingClientRect();
+    const x = e.clientX - rect.left - 700; 
+    const y = e.clientY - rect.top - 750; 
+    blurOverlayFive.style.transform = `translate(${x}px, ${y}px)`;
+});
+
+/*TEXT Six*/
+
+const blurOverlaySix = document.querySelector('.blur-overlay__six');
+const textSix = document.querySelector('.text_six');
+
+textSix.addEventListener('mouseenter', () => {
+    blurOverlaySix.style.opacity = '1';
+});
+
+textSix.addEventListener('mouseleave', () => {
+    blurOverlaySix.style.opacity = '0';
+});
+
+textSix.addEventListener('mousemove', (e) => {
+    const x = e.clientX - 500; 
+    const y = e.clientY - 500;
+    blurOverlaySix.style.transform = `translate(${x}px, ${y}px)`;
+});
+
+</script>
+</html>

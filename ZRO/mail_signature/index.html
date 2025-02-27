@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Signature Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #CCCCCC;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: left;
+            height: 100vh;
+            padding: 0;
+            margin: 0;
+        }
+        .container {
+            background-color: none;
+            padding: 20px;
+            width: 350px;
+            text-align: center;
+        }
+        .form-group {
+            width: 100%;
+        }
+        input {
+            background-color:rgba(22, 22, 22, 0.7);
+            backdrop-filter: blur(20px);
+            width: 90%; 
+            padding: 20px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 10px;
+        }
+        input:focus {
+            outline: none;
+        }
+        input::placeholder {
+            color: #ffffff;
+        }
+        button {
+            background: white;
+            color: black;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .copy-btn {
+            border-radius: 10px;
+            margin-top: 30px;
+            padding: 1rem 2rem;
+            background: #525252;
+            color: white;
+        }
+        .signature-output {
+            margin-top: 20px;
+            padding: 10px;
+            text-align: left;
+        }
+        #signature {
+            border-radius: 10px;
+            background: rgba(125, 125, 125, 0.7);
+            margin-top: 20px;
+            padding: 10px;
+            text-align: left;
+        }
+        .buttons {
+
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 1em;
+        }
+        .svg_background{
+            filter: blur(8px);
+            z-index: -1;
+            position: absolute;
+            scale: 0.9;
+        }
+        .color__button{
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .color__button--white{
+            background-color: white;
+        }
+        .color__button--black{
+            background-color: black;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-group">
+            <input type="text" id="name" placeholder="Enter name">
+        </div>
+        <div class="form-group">
+            <input type="text" id="role" placeholder="Enter role">
+        </div>
+        <div class="form-group">
+            <input type="text" id="phone" placeholder="Enter phone">
+        </div>
+        <div class="buttons">
+            <button class="color__button color__button--white" onclick="generateSignature('white')"></button>
+            <button class="color__button color__button--black" onclick="generateSignature('black')"></button>
+        </div>
+        <div id="signature__container">
+            <div id='signature'>
+                <span style="font-size: 14px; font-weight:600; color: black;">your name</span><br>
+                <span style="font-size: 14px; font-weight:400; color: black;">your role</span><br><br>
+                <span style="font-size: 14px; font-weight:400; color: black;">123 456 789 | zro.bio</span> <br><br>
+                <img src="./logo_black.png" alt="ZRO Logo" style="width: 150px;">
+            </div>
+        </div>
+        <button class="copy-btn" onclick="copySignature()">Copy</button>
+    </div>
+    <svg class="svg_background" width="auto" height="100vh" viewBox="0 0 332 356" xmlns="http://www.w3.org/2000/svg">
+        <path d="M160.301 223.057C167.029 223.528 174.118 222.362 180.766 223.552C191.62 226.457 188.673 239.21 186.931 248.293C181.247 272.922 173.147 300.632 174.118 326.004C174.624 336.626 179.73 347.553 189.533 352.589C205.092 359.875 223.26 353.171 238.682 348.247C266.212 338.342 291.325 320.257 308.16 296.618C320.42 279.49 331.595 256.114 320.62 235.715C303.616 206.089 267.256 234.661 240.906 232.674C225.219 232.722 209.162 223.959 212.389 206.488C215.504 193.822 229.458 198.778 238.562 202.027C269.07 215.882 313.483 212.849 329.556 179.6C335.738 166.487 327.38 150.948 316.084 143.334C306.418 137.436 293.621 139.304 283.047 142.377C273.71 145.226 266.107 151.036 257.959 156.16C248.068 162.465 236.587 168.187 225.179 171.443C204.144 177.693 192.656 171.707 198.396 151.363C200.17 145.082 203.414 138.897 208.038 134.388C225.684 117.364 256.497 128.849 279.362 123.51C323.334 117.476 331.748 75.6075 311.356 36.9554C306.386 26.8754 299.546 16.4841 290.747 9.49277C269.463 -7.56266 242.737 3.29152 224.761 20.7939C217.977 27.2026 212.213 34.4334 207.869 42.622C197.055 63.9472 185.526 94.1793 181.472 118.769C180.3 126.534 179.746 134.555 179.096 142.369C178.766 151.451 175.194 164.939 163.48 162.186C155.805 160.11 154.063 150.852 153.437 143.837C152.586 134.132 151.936 123.525 150.113 113.924C145.32 90.7714 134.971 63.0134 124.454 42.4863C120.416 34.9203 115.238 28.2402 109.04 22.1586C90.743 4.12953 65.582 -7.2913 43.5922 8.0482C34.1348 14.7682 26.7807 25.5745 21.5462 35.9418C0.270958 76.4375 8.48402 119.08 56.9274 124.132C77.7932 127.819 102.2 119.272 120.593 131.243C130.917 138.354 138.4 155.904 134.161 167.405C125.337 183.279 90.6949 165.881 78.0341 158.387C68.5365 152.792 60.0424 145.673 49.3486 142.393C38.8796 139.344 26.2428 137.492 16.5847 143.183C5.15223 150.685 -3.30971 166.296 2.77582 179.472C18.656 212.737 63.2297 215.954 93.6654 202.107C102.786 198.85 116.867 193.766 120.007 206.504C123.25 223.871 107.241 232.714 91.6583 232.69C68.8175 234.198 42.8215 215.443 22.036 225.068C12.0647 230.256 6.96665 243.728 7.27975 254.598C7.69723 270.057 15.7256 284.686 24.5328 297.057C42.966 322.732 71.0975 341.71 101.557 350.873C115.631 354.879 132.94 359.763 145.93 350.713C153.782 345.134 157.684 335.701 158.246 326.347C159.29 302.723 152.072 276.13 146.589 253.177C143.048 238.412 139.138 221.03 159.98 223.073H160.301V223.057Z" 
+        fill="rgb(150, 150, 150)"/>
+    </svg>
+    <script>
+        const logoBlack = "./logo_black.png";
+        const logoWhite = "./logo_white.png";
+
+        function generateSignature(textColor) {
+            let name = document.getElementById("name").value;
+            let role = document.getElementById("role").value;
+            let phone = document.getElementById("phone").value;
+
+            if (!name || !role || !phone) {
+                alert("Please fill out all fields.");
+                return;
+            }
+
+            let logoSrc = textColor === 'white' ? logoWhite :logoBlack;
+
+            let signatureHTML = `
+                <div id='signature'>
+                    <span style="font-size: 14px; font-weight:600; color: ${textColor};">${name}</span><br>
+                    <span style="font-size: 14px; font-weight:400; color: ${textColor};">${role}</span><br><br>
+                    <span style="font-size: 14px; font-weight:400; color: ${textColor};">${phone} | zro.bio</span> <br><br>
+                    <img src="${logoSrc}" alt="ZRO Logo" style="width: 150px;">
+                </div>
+            `;
+            document.getElementById("signature__container").innerHTML = signatureHTML;
+        }
+
+        function copySignature() {
+            let signatureDiv = document.getElementById("signature");
+
+            if (!signatureDiv) {
+                alert("No signature to copy.");
+                return;
+            }
+
+            let clonedSignature = signatureDiv.cloneNode(true);
+
+            clonedSignature.style.background = 'transparent';
+
+            let tempContainer = document.createElement("div");
+            tempContainer.appendChild(clonedSignature);
+            document.body.appendChild(tempContainer);
+
+            let range = document.createRange();
+            range.selectNode(clonedSignature);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+
+            document.execCommand("copy");
+
+            document.body.removeChild(tempContainer);
+        }
+    </script>
+</body>
+</html>
