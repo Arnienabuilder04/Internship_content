@@ -9,43 +9,31 @@
         body, html {
             width: 100vw;
             min-height: 100vh;
-
             height: fit-content;
             display: flex;
             justify-content: center;
             align-items: center;
         }
-
         .container {
             display: grid;
             align-content: center;
             justify-items: center;
+            width: 50%;
+            height: auto;
+            max-height: 100%;
+            max-width: 100%;
         }
-
         .box {
-            width: 100%;
-            height: 100%;
+            width: auto;
+            height: auto;
             aspect-ratio: 1 / 1;
-            position: relative;
             display: flex;
             justify-content: center;
             align-items: center;
         }
-
         .image {
             max-width: 100%;
             max-height: 100%;
-        }
-
-
-        .hide {
-            display: none;
-        }
-
-        @media (min-width: 1000px) {
-            .hide {
-                display: block;
-            }
         }
     </style>
 </head>
@@ -55,123 +43,63 @@
         document.addEventListener("DOMContentLoaded", () => {
             const container = document.querySelector(".container");
 
-            const numRowsMobile = 2; // Set number of rows for Mobile
-            const numColsMobile = 2; // Set number of columns for Mobile
+            const grid = [
+                { "max-width": 760, "columns": 2, "rows": 5 },
+                { "max-width": 1280, "columns": 5, "rows": -1 }, 
+                { "max-width": 1660, "columns": 5, "rows": -1 }, 
+                { "max-width": 1920, "columns": 5, "rows": -1 }, 
+                { "max-width": 2560, "columns": 5, "rows": -1 }, 
+                { "max-width": 3840, "columns": 4, "rows": -1 } 
+            ];
 
-            const numRowsDesktop = 3; // Set number of rows for Desktop
-            const numColsDesktop = 6; // Set number of columns for Desktop
+            function updateGrid() {
+                let numCols;
+                let numRows;
 
-            const offsetXEven = 50; // Set offset x
-            const offsetYEven = 50; // Set offset y
-            const scaleEven = 1.2; // Set scale
+                for (let i = 0; i < grid.length; i++) {
+                    if (window.innerWidth <= grid[i]["max-width"]) {
+                        numCols = grid[i].columns;
+                        const maxRows = Math.floor(window.innerHeight / 200);
+                        numRows = grid[i].rows === -1 ? Math.min(maxRows, numCols) : grid[i].rows;
 
-            const offsetXOdd = 100; // Set offset x
-            const offsetYOdd = 50; // Set offset y
-            const scaleOdd = 0.9; // Set scale
-
-            const scaleParam = 1; // Set scale down parameter
-
-            const gapSize = "1% 1%"; // Set gap size
-
-            const imageWidth = 50; // Set image width
-
-            const containerWidth = 90; // Set container width
-            const containerHeight = 90; // Set container width
-
-            const aspectRatio = 1/1; // Set aspect ratio
-
-            const breakPoint = 1000; // Set breakpoint
-
-            let numImages;
-            let visibleImages;
-
-            if(numRowsMobile * numColsMobile > numRowsDesktop * numColsDesktop) {
-                numImages = numRowsMobile * numColsMobile;
-                visibleImages = numRowsDesktop * numColsDesktop;
-            } else {
-                numImages = numRowsDesktop * numColsDesktop;
-                visibleImages = numRowsMobile * numColsMobile;
-            }
-
-            container.style.gap = gapSize;
-            container.style.width = `${containerWidth}%`;
-            container.style.height = `${containerHeight}%`;
-
-            let numRows, numCols;
-
-            function updateGridLayout() {
-                if (window.innerWidth < 1000) {
-                    container.style.gridTemplateColumns = `repeat(${numColsMobile}, 1fr)`;
-                    container.style.gridTemplateRows = `repeat(${numRowsMobile}, 1fr)`;
-                    numRows = numRowsMobile;
-                    numCols = numColsMobile;
-                } else {
-                    container.style.gridTemplateColumns = `repeat(${numColsDesktop}, 1fr)`;
-                    container.style.gridTemplateRows = `repeat(${numRowsDesktop}, 1fr)`;
-                    numRows = numRowsDesktop;
-                    numCols = numColsDesktop;
-                }
-            }
-
-            for (let i = 0; i < numImages; i++) {
-                let img = document.createElement("img");
-                img.classList.add("image");
-                let id = Math.floor(Math.random() * 200);
-                img.src = `https://picsum.photos/id/${id}/200/300`;
-
-                const div = document.createElement("div");
-                div.classList.add("box");
-                div.style.aspectRatio = `${aspectRatio}`;
-
-                let row = Math.floor(i / numColsMobile); 
-                let col = i % numColsMobile; 
-
-                let offsetX, offsetY, scale;
-
-                if ((row + col) % 2 === 0) { 
-                    offsetX = (Math.random() - 0.5) * offsetXEven;
-                    offsetY = (Math.random() - 0.5) * offsetYEven;
-                    scale = Math.random() / scaleParam + scaleEven; 
-                } else {
-                    offsetX = (Math.random() - 0.5) * offsetXOdd;
-                    offsetY = (Math.random() - 0.5) * offsetYOdd;
-                    scale = Math.random() / scaleParam + scaleOdd;
-                }
-
-                img.style.width = `${imageWidth}%`;
-                img.style.height = `auto`;
-                img.style.transform = `translate(${offsetX}%, ${offsetY}%) scale(${scale})`;
-                img.style.objectFit = "cover";
-
-                div.appendChild(img);
-                container.appendChild(div);
-            }
-
-            console.log(numImages, visibleImages);
-            document.querySelectorAll(".box").forEach((box, index) => {
-                if (index < visibleImages) {
-                    box.classList.remove("hide");
-                } else {
-                    box.classList.add("hide");
-                }
-            });
-
-            updateGridLayout(); 
-            window.addEventListener("resize", updateGridLayout); 
-
-            const  changeMediaQueryBreakpoint = (newBreakpoint) => {
-                const styleSheet = document.getElementById("dynamic-styles").sheet;
-                const rules = styleSheet.cssRules || styleSheet.rules;
-                for (let i = 0; i < rules.length; i++) {
-                    if (rules[i].media && rules[i].media.mediaText.includes("min-width")) {
-                        styleSheet.deleteRule(i);
-                        styleSheet.insertRule(`@media (min-width: ${newBreakpoint}px) { .hide { display: block; } }`, i);
                         break;
                     }
                 }
+
+                const numImages = numRows * numCols;
+                container.innerHTML = ""; // Clear previous images
+
+                container.style.display = "grid";
+                container.style.gridTemplateColumns = `repeat(${numCols}, 1fr)`;
+                container.style.gridTemplateRows = `repeat(${numRows}, 1fr)`;
+                container.style.gap = "1% 1%";
+
+                for (let i = 0; i < numImages; i++) {
+                    let img = document.createElement("img");
+                    img.classList.add("image");
+                    let id = Math.floor(Math.random() * 200);
+                    img.src = `https://picsum.photos/id/${id}/200/300`;
+
+                    const div = document.createElement("div");
+                    div.classList.add("box");
+
+                    const imageWidth = (Math.random()+0.5) * 100
+                    const offsetX = (Math.random()-0.5) * 100 ;
+                    const offsetY = (Math.random()-0.5) * 10 ;
+                    const scale = Math.random() + 0.8;
+
+                    img.style.width = `${imageWidth}%`;
+                    img.style.height = `auto`;
+                    img.style.transform = `translate(${offsetX}%, ${offsetY}%) scale(${scale})`;
+                    img.style.objectFit = "contain";
+
+                    div.appendChild(img);
+                    container.appendChild(div);
+                }
             }
 
-            changeMediaQueryBreakpoint(breakPoint);
+            updateGrid(); 
+            window.addEventListener("resize", updateGrid);
         });
     </script>
 </body>
