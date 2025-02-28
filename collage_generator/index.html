@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collage Generator</title>
+    <link rel="stylesheet" href="./styles/reset.css">
+    <link rel="stylesheet" href="./styles/style.css">
+    <style>
+        .hide {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <section class="container"></section>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const container = document.querySelector(".container");
+
+            const numRowsMobile = 6; // Set number of rows
+            const numColsMobile = 4; // Set number of columns
+
+            const numRowsDesktop = 2; // Set number of rows
+            const numColsDesktop = 6; // Set number of columns
+
+            const offsetXEven = 50; // Set offset x
+            const offsetYEven = 50; // Set offset y
+            const scaleEven = 0.9; // Set scale
+
+            const offsetXOdd = 50; // Set offset x
+            const offsetYOdd = 100; // Set offset y
+            const scaleOdd = 0.7; // Set scale
+
+            const scaleParam = 2; // Set scale parameter
+
+            const gapSize = "5% 5%"; // Set gap size
+
+            const numImages = numRowsMobile * numColsMobile; 
+            container.style.gap = gapSize;
+
+            let numRows, numCols;
+
+            function updateGridLayout() {
+                if (window.innerWidth < 1000) {
+                    container.style.gridTemplateColumns = `repeat(${numColsMobile}, 1fr)`;
+                    container.style.gridTemplateRows = `repeat(${numRowsMobile}, 1fr)`;
+                    numRows = numRowsMobile;
+                    numCols = numColsMobile;
+                } else {
+                    container.style.gridTemplateColumns = `repeat(${numColsDesktop}, 1fr)`;
+                    container.style.gridTemplateRows = `repeat(${numRowsDesktop}, 1fr)`;
+                    numRows = numRowsDesktop;
+                    numCols = numColsDesktop;
+                }
+
+                const visibleImages = numRows * numCols; 
+
+                document.querySelectorAll(".box").forEach((box, index) => {
+                    if (index < visibleImages) {
+                        box.classList.remove("hide");
+                    } else {
+                        box.classList.add("hide");
+                    }
+                });
+            }
+
+            /*
+            const imagePaths = [
+                "./assets/1.jpg", "./assets/2.jpg", "./assets/3.jpg", "./assets/4.jpg",
+                "./assets/5.jpg", "./assets/6.jpg", "./assets/7.jpg", "./assets/8.jpg",
+                "./assets/9.jpg", "./assets/10.jpg", "./assets/11.jpg", "./assets/12.jpg",
+                "./assets/13.jpg", "./assets/14.jpg", "./assets/15.jpg", "./assets/16.jpg",
+                "./assets/17.jpg", "./assets/18.jpg"
+            ];
+            const removedImages = ["13.jpg", "14.jpg", "15.jpg", "16.jpg", "17.jpg", "18.jpg"];
+            */
+
+            for (let i = 0; i < numImages; i++) {
+                let img = document.createElement("img");
+                img.classList.add("image");
+                let id = Math.floor(Math.random() * 100);
+                img.src = `https://picsum.photos/id/${id}/200/300`;
+
+                const div = document.createElement("div");
+                div.classList.add("box");
+
+                let row = Math.floor(i / numColsMobile); 
+                let col = i % numColsMobile; 
+
+                let offsetX, offsetY, scale;
+
+                if ((row + col) % 2 === 0) {  // Checkerboard condition
+                    offsetX = (Math.random() - 0.5) * offsetXEven;
+                    offsetY = (Math.random() - 0.5) * offsetYEven;
+                    scale = Math.random() / scaleParam + scaleEven; 
+                } else {
+                    offsetX = (Math.random() - 0.5) * offsetXOdd;
+                    offsetY = (Math.random() - 0.5) * offsetYOdd;
+                    scale = Math.random() / scaleParam + scaleOdd;
+                }
+
+                img.style.width = `80%`;
+                img.style.height = `auto`;
+                img.style.transform = `translate(${offsetX}%, ${offsetY}%) scale(${scale})`;
+                img.style.objectFit = "cover";
+
+                div.appendChild(img);
+                container.appendChild(div);
+            }
+
+
+            updateGridLayout(); // Apply initial visibility
+            window.addEventListener("resize", updateGridLayout); // Update on resize
+        });
+    </script>
+
+</body>
+</html>
