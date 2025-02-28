@@ -9,12 +9,9 @@ body, html {
 }
 
 .container {
-    width: 95%;
-    height: fit-content;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-columns:repeat(6, 1fr); ;
-    gap: 20%;
+    align-content: center;
+    justify-items: center;
 }
 
 .box {
@@ -32,8 +29,3 @@ body, html {
     max-height: 100%;
 }
 
-@media (max-width: 1000px) {
-    .container {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}

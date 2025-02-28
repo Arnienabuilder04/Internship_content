@@ -6,9 +6,14 @@
     <title>Collage Generator</title>
     <link rel="stylesheet" href="./styles/reset.css">
     <link rel="stylesheet" href="./styles/style.css">
-    <style>
+    <style id="dynamic-styles">
         .hide {
             display: none;
+        }
+        @media (min-width: 1000px) {
+            .hide {
+                display: block;
+            }
         }
     </style>
 </head>
@@ -19,26 +24,47 @@
         document.addEventListener("DOMContentLoaded", () => {
             const container = document.querySelector(".container");
 
-            const numRowsMobile = 6; // Set number of rows
-            const numColsMobile = 4; // Set number of columns
+            const numRowsMobile = 2; // Set number of rows for Mobile
+            const numColsMobile = 2; // Set number of columns for Mobile
 
-            const numRowsDesktop = 2; // Set number of rows
-            const numColsDesktop = 6; // Set number of columns
+            const numRowsDesktop = 3; // Set number of rows for Desktop
+            const numColsDesktop = 6; // Set number of columns for Desktop
 
             const offsetXEven = 50; // Set offset x
             const offsetYEven = 50; // Set offset y
-            const scaleEven = 0.9; // Set scale
+            const scaleEven = 1.5; // Set scale
 
             const offsetXOdd = 50; // Set offset x
-            const offsetYOdd = 100; // Set offset y
-            const scaleOdd = 0.7; // Set scale
+            const offsetYOdd = 50; // Set offset y
+            const scaleOdd = 0.9; // Set scale
 
-            const scaleParam = 2; // Set scale parameter
+            const scaleParam = 1; // Set scale down parameter
 
-            const gapSize = "5% 5%"; // Set gap size
+            const gapSize = "1% 1%"; // Set gap size
 
-            const numImages = numRowsMobile * numColsMobile; 
+            const imageWidth = 50; // Set image width
+
+            const containerWidth = 60; // Set container width
+            const containerHeight = 90; // Set container width
+
+            const aspectRatio = 1/1; // Set aspect ratio
+
+            const breakPoint = 1000; // Set breakpoint
+
+            let numImages;
+            let visibleImages;
+
+            if(numRowsMobile * numColsMobile > numRowsDesktop * numColsDesktop) {
+                numImages = numRowsMobile * numColsMobile;
+                visibleImages = numRowsDesktop * numColsDesktop;
+            } else {
+                numImages = numRowsDesktop * numColsDesktop;
+                visibleImages = numRowsMobile * numColsMobile;
+            }
+
             container.style.gap = gapSize;
+            container.style.width = `${containerWidth}%`;
+            container.style.height = `${containerHeight}%`;
 
             let numRows, numCols;
 
@@ -54,28 +80,7 @@
                     numRows = numRowsDesktop;
                     numCols = numColsDesktop;
                 }
-
-                const visibleImages = numRows * numCols; 
-
-                document.querySelectorAll(".box").forEach((box, index) => {
-                    if (index < visibleImages) {
-                        box.classList.remove("hide");
-                    } else {
-                        box.classList.add("hide");
-                    }
-                });
             }
-
-            /*
-            const imagePaths = [
-                "./assets/1.jpg", "./assets/2.jpg", "./assets/3.jpg", "./assets/4.jpg",
-                "./assets/5.jpg", "./assets/6.jpg", "./assets/7.jpg", "./assets/8.jpg",
-                "./assets/9.jpg", "./assets/10.jpg", "./assets/11.jpg", "./assets/12.jpg",
-                "./assets/13.jpg", "./assets/14.jpg", "./assets/15.jpg", "./assets/16.jpg",
-                "./assets/17.jpg", "./assets/18.jpg"
-            ];
-            const removedImages = ["13.jpg", "14.jpg", "15.jpg", "16.jpg", "17.jpg", "18.jpg"];
-            */
 
             for (let i = 0; i < numImages; i++) {
                 let img = document.createElement("img");
@@ -85,13 +90,14 @@
 
                 const div = document.createElement("div");
                 div.classList.add("box");
+                div.style.aspectRatio = `${aspectRatio}`;
 
                 let row = Math.floor(i / numColsMobile); 
                 let col = i % numColsMobile; 
 
                 let offsetX, offsetY, scale;
 
-                if ((row + col) % 2 === 0) {  // Checkerboard condition
+                if ((row + col) % 2 === 0) { 
                     offsetX = (Math.random() - 0.5) * offsetXEven;
                     offsetY = (Math.random() - 0.5) * offsetYEven;
                     scale = Math.random() / scaleParam + scaleEven; 
@@ -101,7 +107,7 @@
                     scale = Math.random() / scaleParam + scaleOdd;
                 }
 
-                img.style.width = `80%`;
+                img.style.width = `${imageWidth}%`;
                 img.style.height = `auto`;
                 img.style.transform = `translate(${offsetX}%, ${offsetY}%) scale(${scale})`;
                 img.style.objectFit = "cover";
@@ -110,11 +116,32 @@
                 container.appendChild(div);
             }
 
+            console.log(numImages, visibleImages);
+            document.querySelectorAll(".box").forEach((box, index) => {
+                if (index < visibleImages) {
+                    box.classList.remove("hide");
+                } else {
+                    box.classList.add("hide");
+                }
+            });
 
-            updateGridLayout(); // Apply initial visibility
-            window.addEventListener("resize", updateGridLayout); // Update on resize
+            updateGridLayout(); 
+            window.addEventListener("resize", updateGridLayout); 
+
+            const  changeMediaQueryBreakpoint = (newBreakpoint) => {
+                const styleSheet = document.getElementById("dynamic-styles").sheet;
+                const rules = styleSheet.cssRules || styleSheet.rules;
+                for (let i = 0; i < rules.length; i++) {
+                    if (rules[i].media && rules[i].media.mediaText.includes("min-width")) {
+                        styleSheet.deleteRule(i);
+                        styleSheet.insertRule(`@media (min-width: ${newBreakpoint}px) { .hide { display: block; } }`, i);
+                        break;
+                    }
+                }
+            }
+
+            changeMediaQueryBreakpoint(breakPoint);
         });
     </script>
-
 </body>
 </html>
