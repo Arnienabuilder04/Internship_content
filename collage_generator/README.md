@@ -28,8 +28,16 @@ scaleParam → Scales down the maximum amount of randomness.
  scale = Math.random() / scaleParam + scaleOdd;
 ```
 
-So in general every image is being moved according to these variables
+
+imageWidth → Sets the standard image width.
 ```
+img.style.width = `${imageWidth}%`;
+```
+
+
+So in general every image is being moved according to these variables:
+```
+img.style.width = `${imageWidth}%`;
 img.style.transform = "translate(${offsetX}%, ${offsetY}%) scale(${scale})";
 ```
 
