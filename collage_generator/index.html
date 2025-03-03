@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Collage Generator</title>
-    <link rel="stylesheet" href="./styles/style.css">
     <style>
         body, html {
             width: 100vw;
@@ -80,11 +79,12 @@
             container.style.gridAutoRows = "1fr"; 
         }
 
+        let adjustedOffsetXRow = window.innerWidth < 900 ? paramOffsetXRow / 20 : paramOffsetXRow;
         let totalImages = columns * (selectedConfig.rows || 5); 
-        generateImages(totalImages, columns);
+        generateImages(totalImages, columns, adjustedOffsetXRow);
     }
 
-    function generateImages(numImages, columns) {
+    function generateImages(numImages, columns, adjustedOffsetXRow) {
         container.innerHTML = ""; 
 
         let numRows = Math.ceil(numImages / columns);
@@ -104,7 +104,7 @@
 
             let rowIndex = Math.floor(i / columns);
 
-            let offsetX = (rowIndex % 2 === 0 ? firstRowDirection : -firstRowDirection) * paramOffsetXRow + (Math.random() - 0.5) * paramOffsetX;
+            let offsetX = (rowIndex % 2 === 0 ? firstRowDirection : -firstRowDirection) * adjustedOffsetXRow + (Math.random() - 0.5) * paramOffsetX;
             let offsetY = (Math.random() - 0.5) * paramOffsetY;
             let scale = (Math.random() * 0.5) + paramScale;
 
