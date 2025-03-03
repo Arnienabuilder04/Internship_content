@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Collage Generator</title>
     <link rel="stylesheet" href="./styles/style.css">
-    <style id="dynamic-styles">
+    <style>
         body, html {
             width: 100vw;
             min-height: 100vh;
@@ -13,101 +13,112 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            overflow: hidden;
         }
         .container {
             display: grid;
             align-content: center;
             justify-items: center;
-            width: 100%;
-            height: 100%;
             max-height: 100vh;
             max-width: 100%;
         }
         .box {
-            width: 100%;
-            height: 100%;
             aspect-ratio: 1 / 1;
             display: flex;
             justify-content: center;
             align-items: center;
         }
         .image {
-            max-width: 100%;
-            max-height: 100%;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
     </style>
 </head>
 <body>
     <section class="container"></section>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const container = document.querySelector(".container");
+</body>
+<script>
+    const container = document.querySelector(".container");
 
-            const grid = [
-                { "max-width": 760, "columns": 5, "rows": 5 },
-                { "max-width": 1280, "columns": 5, "rows": -1 }, 
-                { "max-width": 1660, "columns": 8, "rows": -1 }, 
-                { "max-width": 1920, "columns": 5, "rows": -1 }, 
-                { "max-width": 2560, "columns": 5, "rows": -1 }, 
-                { "max-width": 3840, "columns": 16, "rows": -1 } 
-            ];
+    const paramOffsetXRow = 35;
+    const paramOffsetX = 50;
+    const paramOffsetY = 50;
+    const paramScale = 1;
 
-            function updateGrid() {
-        let numCols;
-        let numRows;
+    const paramGapX = "0vh";
+    const paramGapY = "1vw";
 
-        for (let i = 0; i < grid.length; i++) {
-            if (window.innerWidth <= grid[i]["max-width"]) {
-                numCols = grid[i].columns;
+    const paramContainerWidth = "90vw";
+    const paramContainerHeight = "auto";
 
-                const containerHeight = container.getBoundingClientRect().height || window.innerHeight * 0.95;
-                const boxHeight = containerHeight / numCols; 
-                if(grid[i].rows === -1){
-                    numRows =  Math.floor(containerHeight / boxHeight);
-                }else{
-                    numRows = grid[i].rows;
-                }
-                console.log(numRows,numCols,containerHeight,boxHeight);
-                break;
-            }
+    const grid = [
+        { "max-width": 760, "columns": 2, "rows": 2 }, 
+        { "max-width": 1280, "columns": 3 }, 
+        { "max-width": 1660, "columns": 4 , "rows": 4 }, 
+        { "max-width": 1920, "columns": 6, "rows": 4 }, 
+        { "max-width": 2560, "columns": 7 , "rows": 3 }, 
+        { "max-width": 3840, "columns": 8, "rows": 1 }
+    ];
+
+    function updateGrid() {
+        console.log("updateGrid");
+        let containerWidth = container.clientWidth; 
+        let containerHeight = container.clientHeight; 
+        
+        let selectedConfig = grid.find(g => containerWidth <= g["max-width"]) || grid[grid.length - 1];
+        let columns = selectedConfig.columns;
+        
+        container.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
+        container.style.gap = `${paramGapX} ${paramGapY}`;
+        container.style.width = paramContainerWidth;
+        container.style.height = paramContainerHeight;
+
+        if (selectedConfig.rows) {
+            container.style.gridTemplateRows = `repeat(${selectedConfig.rows}, 1fr)`;
+        } else {
+            container.style.gridAutoRows = "1fr"; 
         }
-    
-        const numImages = numRows * numCols;
-        container.innerHTML = ""; // Clear previous images
 
-        container.style.display = "grid";
-        container.style.gridTemplateColumns = `repeat(${numCols}, 1fr)`;
-        container.style.gridTemplateRows = `repeat(${numRows}, 1fr)`;
-        container.style.gap = "1% 1%";
+        let totalImages = columns * (selectedConfig.rows || 5); 
+        generateImages(totalImages, columns);
+    }
+
+    function generateImages(numImages, columns) {
+        container.innerHTML = ""; 
+
+        let numRows = Math.ceil(numImages / columns);
+
+        let firstRowDirection = Math.random() < 0.5 ? 1 : -1;
 
         for (let i = 0; i < numImages; i++) {
+            let zIndex = Math.floor(Math.random() * 3);
             let img = document.createElement("img");
             img.classList.add("image");
-            let id = Math.floor(Math.random() * 200);
+            img.style.zIndex = zIndex;
+            let id = Math.floor(Math.random() * 100);
             img.src = `https://picsum.photos/id/${id}/200/300`;
 
             const div = document.createElement("div");
             div.classList.add("box");
 
-            const imageWidth = (Math.random() + 0.5) * 100;
-            const offsetX = (Math.random() - 0.5) * 100;
-            const offsetY = (Math.random() - 0.5) * 10;
-            const scale = Math.random() + 1.2;
+            let rowIndex = Math.floor(i / columns);
 
-            img.style.width = `${imageWidth}%`;
-            img.style.height = `auto`;
+            let offsetX = (rowIndex % 2 === 0 ? firstRowDirection : -firstRowDirection) * paramOffsetXRow + (Math.random() - 0.5) * paramOffsetX;
+            let offsetY = (Math.random() - 0.5) * paramOffsetY;
+            let scale = (Math.random() * 0.5) + paramScale;
+
             img.style.transform = `translate(${offsetX}%, ${offsetY}%) scale(${scale})`;
-            img.style.objectFit = "contain";
 
             div.appendChild(img);
             container.appendChild(div);
         }
     }
 
+    window.addEventListener("resize", updateGrid);
+    addEventListener("DOMContentLoaded", () => {
         updateGrid();
-        window.addEventListener("resize", updateGrid);
-
-        });
-    </script>
-</body>
+    });
+    updateGrid();
+</script>
 </html>
