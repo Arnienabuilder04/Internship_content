@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>demo_blur_effect</title>
+</head>
+<style>
+ html, body {
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Inter', sans-serif;
+    overflow: hidden;
+}
+
+/* Container for text */
+.text-container {
+    background: rgb(0, 0, 0);
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 60vw;
+    height: 50vh;
+    position: relative;
+    overflow: hidden; /* Prevent ellipse from going outside */
+    border-radius: 10px;
+}
+
+/* Text elements */
+.text {
+    text-align: center;
+    font-size: 56px;
+    font-weight: 300;
+    position: relative;
+    z-index: 1;
+    transition: filter 0.5s ease-out;
+    color: white;
+    cursor: pointer;
+}
+
+/* Hover effect inside container */
+.click-effect {
+    z-index: 1;
+    position: absolute;
+    width: 10rem;
+    height: 10rem;
+    background: rgba(255, 255, 255, 0); /* Transparent background */
+    backdrop-filter: blur(1px); /* Blur effect */
+    filter: blur(5px);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    pointer-events: none;
+    transition: transform 1s ease-out, opacity 0.5s ease-out;
+
+    /* Mask for opacity */
+    mask-image: radial-gradient(circle, rgba(0, 0, 0, 1) 90%, rgba(0, 0, 0, 0) 100%);
+    -webkit-mask-image: radial-gradient(circle, rgba(0, 0, 0, 1) 90%, rgba(0, 0, 0, 0) 100%); /* For Safari */
+}
+
+
+@keyframes growFade {
+    from {
+        transform: translate(-50%, -50%) scale(0);
+    }
+    to {
+        transform: translate(-50%, -50%) scale(5);
+    }
+}
+
+nav {
+    font-size: 2rem;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    z-index: 2;
+    padding: 1rem;
+    background-color: rgb(154, 154, 154);
+    display: flex;
+}
+
+nav > ul {
+    display: flex;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+}
+
+nav > ul > li > a {
+    text-decoration: none;
+    color: white;
+    padding: 1rem;
+}
+
+nav > ul > li:hover {
+    scale: 1.2;
+}
+</style>
+<body>
+    <nav>
+        <ul>
+            <li><a href="./index_text.html">text</a></li>
+            <li><a href="./index_images.html">images</a></li>
+            <li><a href="./index_text_detail.html">custom</a></li>
+            <li><a href="./index_text_extra.html">extra</a></li>
+        </ul>
+    </nav>
+    
+    <div class="text-container" id="textContainer">
+        <p class="text text_one" id="hoverText">What we do</p>
+    </div>
+</body>
+<script>
+    document.getElementById("hoverText").addEventListener("mouseenter", function (e) {
+        const rect = document.getElementById("textContainer").getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const ellipse = document.createElement("div");
+        ellipse.classList.add("click-effect");
+        ellipse.style.left = `${x}px`;
+        ellipse.style.top = `${y}px`;
+
+        document.getElementById("textContainer").appendChild(ellipse);
+        ellipse.style.animation = "growFade 1s ease-out forwards";
+
+        e.target.addEventListener("mouseleave", function () {
+            ellipse.style.opacity = "0";
+            setTimeout(() => {
+                ellipse.remove();
+            }, 500);
+        }, { once: true });
+    });
+</script>
+</html>
