@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blur Effect on Hover</title>
+    <style>
+        html, body {
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+        }
+
+        .text-container {
+            background: rgb(0, 0, 0);
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 60vw;
+            height: 50vh;
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        .text {
+            display: flex;
+            text-align: center;
+            font-size: 56px;
+            font-weight: 300;
+            gap: 1rem;
+
+            color: white;
+            cursor: pointer;
+        }
+
+        .text span {
+            position: relative;
+            z-index: 1;
+            transition: filter 0.5s ease-out;
+        }
+
+        .blur-effect {
+            filter: blur(10px);
+            transition: filter 0.5s ease-out;
+        }
+
+        .hovered {
+            transition: filter 0.1s ease-out;
+        }
+
+        nav {
+            font-size: 2rem;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            z-index: 2;
+            padding: 1rem;
+            background-color: rgb(154, 154, 154);
+            display: flex;
+        }
+
+        nav > ul {
+            display: flex;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        nav > ul > li > a {
+            text-decoration: none;
+            color: white;
+            padding: 1rem;
+        }
+
+        nav > ul > li:hover {
+            scale: 1.2;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="./index_text.html">text</a></li>
+            <li><a href="./index_images.html">images</a></li>
+            <li><a href="./index_text_detail.html">custom</a></li>
+            <li><a href="./index_text_extra.html">extra</a></li>
+        </ul>
+    </nav>
+    
+    <div class="text-container" id="textContainer">
+        <p class="text" id="text">
+            <span>What</span>
+            <span>we</span>
+            <span>do</span>
+        </p>
+    </div>
+
+    <script>
+        // Function to apply the blur effect to words on hover
+        const textContainer = document.getElementById('text');
+        const words = textContainer.getElementsByTagName('span');
+        
+        function applyBlurEffect(e, index) {
+            // Reset all words to remove blur
+            Array.from(words).forEach(word => {
+                word.classList.remove('blur-effect');
+            });
+
+            // Apply blur to the hovered word
+            const blurDuration = 0.5; // Duration for the hovered word
+            const totalWords = words.length;
+            
+            for (let i = 0; i < totalWords; i++) {
+                const distance = Math.abs(i - index);
+                const delay = (distance * 0.2); // Delay between words (more delay for farther words)
+
+                if (i === index) {
+                    words[i].style.transition = `filter ${blurDuration}s ease-out`;
+                    words[i].classList.add('hovered');
+                    words[i].classList.add('blur-effect');
+                } else {
+                    words[i].style.transition = `filter ${blurDuration + delay}s ease-out`;
+                    words[i].classList.add('blur-effect');
+                }
+            }
+        }
+
+        // Add mouseenter and mouseleave event listeners to each word
+        Array.from(words).forEach((word, index) => {
+            word.addEventListener('mouseenter', (e) => applyBlurEffect(e, index));
+            word.addEventListener('mouseleave', () => {
+                // Reset all words back to normal when mouse leaves
+                Array.from(words).forEach(word => word.classList.remove('blur-effect'));
+            });
+        });
+    </script>
+</body>
+</html>

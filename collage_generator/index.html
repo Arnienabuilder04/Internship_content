@@ -16,13 +16,14 @@
         }
         .container {
             display: grid;
-            align-content: center;
-            justify-items: center;
-            max-height: 100vh;
+            align-content: center; /* Center items vertically */
+            justify-content: center; /* Center items horizontally */
+            justify-items: center;  /* Center the items in each cell */
+            align-items: center;
+            height: auto;
             max-width: 100%;
         }
         .box {
-            aspect-ratio: 1 / 1;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -40,55 +41,61 @@
 <script>
     const container = document.querySelector(".container");
 
-    const paramOffsetXRow = 35;
-    const paramOffsetX = 50;
-    const paramOffsetY = 50;
-    const paramScale = 1;
+    const gridFormat = 1; // 1 = checkerboard, 0 = regular grid ( how the elements should be placed on the page)
+    const paramOffsetX = 20; // 0 - 200 (how much offset the images should have on the X-axis)
+    const paramOffsetY = 20; // 0 - 200 (how much offset the images should have on the Y-axis)
+    const paramScale = 1; // 0 - 2 (how much the images should be scaled)
 
-    const paramGapX = "0vh";
-    const paramGapY = "1vw";
+    const boxAspectRatio = "1 / 1"; // 1 / 1 (how the aspect ratio of the images should be)
 
-    const paramContainerWidth = "90vw";
-    const paramContainerHeight = "auto";
+    const GapXaxis = "0vw"; // 0 - 70 (how much gap should be between the images on the X-axis)
+    const GapYaxis = "0vh"; // 0 - 70 (how much gap should be between the images on the Y-axis)
+
+    const ContainerWidth = "70vw"; // 0 - 100 (how much width the container/grid should have)
 
     const grid = [
-        { "max-width": 760, "columns": 2, "rows": 3 }, 
-        { "max-width": 1280, "columns": 3 }, 
-        { "max-width": 1660, "columns": 4 , "rows": 4 }, 
+        { "max-width": 760, "columns": 3, "rows": 4 }, 
+        { "max-width": 1280, "columns": 8 , "rows": 3 }, 
+        { "max-width": 1660, "columns": 7 , "rows": 3 }, 
         { "max-width": 1920, "columns": 6, "rows": 4 }, 
         { "max-width": 2560, "columns": 7 , "rows": 3 }, 
         { "max-width": 3840, "columns": 8, "rows": 1 }
     ];
 
+    windowWidth = window.innerWidth * (parseFloat(ContainerWidth) / 100);
+    
     function updateGrid() {
-        console.log("updateGrid");
-        let containerWidth = container.clientWidth; 
-        let containerHeight = container.clientHeight; 
-        
-        let selectedConfig = grid.find(g => containerWidth <= g["max-width"]) || grid[grid.length - 1];
+        let gridWidth = container.clientWidth? container.clientWidth : windowWidth;
+        let gridHeight = container.clientHeight? container.clientHeight : "auto"; 
+        console.log("container", container.clientWidth, gridHeight);
+        let selectedConfig = grid.find(g => gridWidth <= g["max-width"]) || grid[grid.length - 1];
         let columns = selectedConfig.columns;
+        let rows = selectedConfig.rows;
         
         container.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
-        container.style.gap = `${paramGapX} ${paramGapY}`;
-        container.style.width = paramContainerWidth;
-        container.style.height = paramContainerHeight;
+        container.style.gap = `${GapYaxis} ${GapXaxis}`;
+        container.style.width = ContainerWidth;
+        console.log("info", gridWidth, gridHeight);
 
-        if (selectedConfig.rows) {
+        if (rows) {
             container.style.gridTemplateRows = `repeat(${selectedConfig.rows}, 1fr)`;
         } else {
             container.style.gridAutoRows = "1fr"; 
         }
 
-        let adjustedOffsetXRow = window.innerWidth < 900 ? paramOffsetXRow / 20 : paramOffsetXRow;
-        let totalImages = columns * (selectedConfig.rows || 5); 
-        generateImages(totalImages, columns, adjustedOffsetXRow);
+        let totalImages = columns * (selectedConfig.rows || 4); 
+        console.log("info", rows, columns);
+        generateImages(totalImages, columns, rows);
     }
 
-    function generateImages(numImages, columns, adjustedOffsetXRow) {
+    function generateImages(numImages, columns, rows) {
         container.innerHTML = ""; 
 
         let numRows = Math.ceil(numImages / columns);
-
+        let offsetRow = ContainerWidth / columns;
+        let containerWidth = window.innerWidth * (parseFloat(ContainerWidth) / 100);
+        let boxWidth = containerWidth / columns;
+        let halfBoxWidth = boxWidth / 8;
         let firstRowDirection = Math.random() < 0.5 ? 1 : -1;
 
         for (let i = 0; i < numImages; i++) {
@@ -101,24 +108,24 @@
 
             const div = document.createElement("div");
             div.classList.add("box");
-
+            div.style.aspectRatio = boxAspectRatio;        
+            
             let rowIndex = Math.floor(i / columns);
-
-            let offsetX = (rowIndex % 2 === 0 ? firstRowDirection : -firstRowDirection) * adjustedOffsetXRow + (Math.random() - 0.5) * paramOffsetX;
+            let offsetX = (rowIndex % 2 === 0 ? firstRowDirection : -firstRowDirection) * (gridFormat * halfBoxWidth) + (Math.random() - 0.5) * paramOffsetX;
             let offsetY = (Math.random() - 0.5) * paramOffsetY;
             let scale = (Math.random() * 0.5) + paramScale;
 
             img.style.transform = `translate(${offsetX}%, ${offsetY}%) scale(${scale})`;
 
-            div.appendChild(img);
-            container.appendChild(div);
+            if (i < numImages) {
+                div.appendChild(img);
+                container.appendChild(div);
+            }
         }
     }
 
     window.addEventListener("resize", updateGrid);
-    addEventListener("DOMContentLoaded", () => {
-        updateGrid();
-    });
-    updateGrid();
+    window.onload = updateGrid;
+
 </script>
 </html>
