@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <title>Smooth Blur on Scroll</title>
+    <style>
+        img {
+            width: 110%;
+            height:30%;
+            filter: blur(20px); /* Start blurry */
+        }
+        
+        nav{
+            font-size: 2rem;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            z-index: 2;
+            padding: 1rem;
+            background-color: rgb(154, 154, 154);
+            display: flex;
+        }
+        
+        nav>ul{
+            display: flex;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            
+        }
+        
+        nav>ul>li>a{
+            text-decoration: none;
+            color: white;
+            padding: 1rem;
+            
+        }
+        
+        nav>ul>li{
+            transition: 0.5s scale ease;
+        }
+        
+        nav>ul>li:hover{
+        
+            scale: 1.2;
+        }
+        
+        .gradient{
+            position: relative;
+            margin-bottom: -45rem;
+            width: 100vw;
+            height: 80rem;
+            background: radial-gradient(ellipse 100% 100% at 50% 100%, #999999 40%, rgba(153, 153, 153, 0) 100%);
+            z-index: 1;
+        }
+
+</style>
+<nav>
+    <ul>
+        <li><a href="./index_text.html">text</a></li>
+        <li><a href="./index_images.html">images</a></li>
+        <li><a href="./index_text_detail.html">custom</a></li>
+        <li><a href="./index_text_mask_layer.html">extra 1</a></li>
+        <li><a href="./index_text_word_word.html">extra 2</a></li>
+        <li><a href="./index_image_blur.html">extra image</a></li>
+    </ul>
+</nav>
+</head>
+<body class="bg-white-900 text-white">
+
+    <div class="h-screen"></div> <!-- Empty space before -->
+    <div id="gradient" class="gradient"></div>
+    <img id="scrollImage" src="./assets/background_img.png" alt="Background Image">
+
+    <div class="h-screen"></div> <!-- Empty space after -->
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        gsap.to("#scrollImage", {
+            scrollTrigger: {
+                trigger: "#scrollImage",
+                start: "top 150%",
+                end: "bottom 0%",
+                scrub: 2, // Smooth transition
+                markers: true
+            },
+            keyframes: [
+                { filter: "blur(100px)" }, // Start with blur
+                { filter: "blur(0px)" },  // End with no blur
+                { filter: "blur(0px)" },  // End with no blur
+                { filter: "blur(0px)" },  // End with no blur
+            ],
+        });
+
+        gsap.to("#gradient", {
+            scrollTrigger: {
+                trigger: "#scrollImage",
+                start: "top 150%",
+                end: "bottom 0%",
+                scrub: 2, // Smooth transition
+                markers: true
+            },
+            keyframes: [
+                {opacity: 1 }, // Start with blur
+                {opacity: 0 },  // End with no blur
+                { },  // End with no blur
+                { },  // End with no blur
+            ],
+        });
+    </script>
+
+</body>
+</html>
