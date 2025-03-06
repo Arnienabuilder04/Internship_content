@@ -8,17 +8,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <title>Smooth Blur on Scroll</title>
     <style>
-        img {
-            width: 110%;
-            height:30%;
+        .img {
+            width: 120vw;
+            max-width: 120vw;
             filter: blur(20px); /* Start blurry */
+            margin-left: -10vw;
         }
         
         nav{
             font-size: 2rem;
             position: fixed;
             bottom: 0;
-            right: 0;
+            right: 20%;
             z-index: 2;
             padding: 1rem;
             background-color: rgb(154, 154, 154);
@@ -52,19 +53,20 @@
             scale: 1.2;
         }
         
-        .gradient{
-            position: relative;
-            margin-bottom: -45rem;
-            width: 100vw;
-            height: 80rem;
-            background: radial-gradient(ellipse 100% 100% at 50% 100%, #999999 40%, rgba(153, 153, 153, 0) 100%);
+
+        #scrollImageBlur{
+            width: 100%;
+            height: 50rem;
+            filter: blur(0px);
+            margin-bottom: -10rem;
             z-index: 1;
+
         }
 
 </style>
 <nav>
     <ul>
-        <li><a href="./index_text.html">text</a></li>
+        <li><a href="./index_extra.html">text</a></li>
         <li><a href="./index_images.html">images</a></li>
         <li><a href="./index_text_detail.html">custom</a></li>
         <li><a href="./index_text_mask_layer.html">extra 1</a></li>
@@ -76,8 +78,8 @@
 <body class="bg-white-900 text-white">
 
     <div class="h-screen"></div> <!-- Empty space before -->
-    <div id="gradient" class="gradient"></div>
-    <img id="scrollImage" src="./assets/background_img.png" alt="Background Image">
+    <img id="scrollImageBlur" src="./assets/gradient_back_2.png" alt="Background Image">
+    <video autoplay="true" class="img" id="scrollImage" src="./assets/video.mp4" alt="Background Image">
 
     <div class="h-screen"></div> <!-- Empty space after -->
 
@@ -100,19 +102,28 @@
             ],
         });
 
-        gsap.to("#gradient", {
+        gsap.to("#scrollImageBlur", {
             scrollTrigger: {
                 trigger: "#scrollImage",
-                start: "top 150%",
+                start: "top 200%",
                 end: "bottom 0%",
-                scrub: 2, // Smooth transition
+                scrub: true, // Smooth transition
                 markers: true
             },
             keyframes: [
-                {opacity: 1 }, // Start with blur
+
+                {opacity: 1, 
+                    transform: "translateY(0px)"
+                 }, // Start with blur
+
+                {opacity: 0,
+                    transform: "translateY(400px)"
+
+                 },  // End with no blur
                 {opacity: 0 },  // End with no blur
-                { },  // End with no blur
-                { },  // End with no blur
+
+
+
             ],
         });
     </script>
