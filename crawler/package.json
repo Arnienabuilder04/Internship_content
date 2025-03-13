@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "cheerio": "^1.0.0",
+    "simplecrawler": "^1.1.9"
+  }
+}
