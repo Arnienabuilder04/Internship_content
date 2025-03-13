@@ -15,37 +15,15 @@
             align-items: center;
             font-family: 'Inter', sans-serif;
             overflow: hidden;
-        }
-
-        .text-container {
             background: white;
-            padding: 3rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            width: 60vw;
-            height: 50vh;
-            position: relative;
-            overflow: hidden;
-            border-radius: 10px;
         }
 
-        .text {
-            display: flex;
-            text-align: center;
+        p {
             font-size: 56px;
             font-weight: 300;
-            gap: 1rem;
-
             color: black;
+            text-align: center;
             cursor: pointer;
-        }
-
-        .text span {
-            position: relative;
-            z-index: 1;
-            transition: filter 0.5s ease-out;
         }
 
         .blur-effect {
@@ -56,95 +34,49 @@
         .hovered {
             transition: filter 0.1s ease-out;
         }
-
-        nav {
-            font-size: 2rem;
-            position: fixed;
-            bottom: 0;
-            right: 20%;
-            z-index: 2;
-            padding: 1rem;
-            background-color: rgb(154, 154, 154);
-            display: flex;
-        }
-
-        nav > ul {
-            display: flex;
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-            align-items: center;
-            justify-content: center;
-            gap: 2rem;
-        }
-
-        nav > ul > li > a {
-            text-decoration: none;
-            color: white;
-            padding: 1rem;
-        }
-
-        nav > ul > li:hover {
-            scale: 1.2;
-        }
     </style>
 </head>
 <body>
-    <nav>
-        <ul>
-            <li><a href="./index_extra.html">text</a></li>
-            <li><a href="./index_images.html">images</a></li>
-            <li><a href="./index_text_detail.html">custom</a></li>
-            <li><a href="./index_text_mask_layer.html">extra 1</a></li>
-            <li><a href="./index_text_word_word.html">extra 2</a></li>
-            <li><a href="./index_image_blur.html">extra image</a></li>
-        </ul>
-    </nav>
-    
-    <div class="text-container" id="textContainer">
-        <p class="text" id="text">
-            <span>What</span>
-            <span>we</span>
-            <span>do</span>
-        </p>
-    </div>
+    <p id="text">What we do</p>
 
     <script>
-        // Function to apply the blur effect to words on hover
-        const textContainer = document.getElementById('text');
-        const words = textContainer.getElementsByTagName('span');
-        
-        function applyBlurEffect(e, index) {
+        // Select the text element
+        const textElement = document.getElementById('text');
+
+        // Split text into words and wrap each word in a <span>
+        const words = textElement.innerText.split(" ");
+        textElement.innerHTML = words.map(word => `<span>${word}</span>`).join(" ");
+
+        // Get the newly created span elements
+        const spans = textElement.getElementsByTagName('span');
+
+        function applyBlurEffect(index) {
             // Reset all words to remove blur
-            Array.from(words).forEach(word => {
-                word.classList.remove('blur-effect');
+            Array.from(spans).forEach(span => {
+                span.classList.remove('blur-effect');
             });
 
-            // Apply blur to the hovered word
-            const blurDuration = 0.5; // Duration for the hovered word
-            const totalWords = words.length;
-            
-            for (let i = 0; i < totalWords; i++) {
+            // Apply blur based on hover position
+            const blurDuration = 0.5;
+            Array.from(spans).forEach((span, i) => {
                 const distance = Math.abs(i - index);
-                const delay = (distance * 0.2); // Delay between words (more delay for farther words)
+                const delay = distance * 0.2; // More delay for farther words
 
                 if (i === index) {
-                    words[i].style.transition = `filter ${blurDuration}s ease-out`;
-                    words[i].classList.add('hovered');
-                    words[i].classList.add('blur-effect');
+                    span.style.transition = `filter ${blurDuration}s ease-out`;
+                    span.classList.add('hovered', 'blur-effect');
                 } else {
-                    words[i].style.transition = `filter ${blurDuration + delay}s ease-out`;
-                    words[i].classList.add('blur-effect');
+                    span.style.transition = `filter ${blurDuration + delay}s ease-out`;
+                    span.classList.add('blur-effect');
                 }
-            }
+            });
         }
 
-        // Add mouseenter and mouseleave event listeners to each word
-        Array.from(words).forEach((word, index) => {
-            word.addEventListener('mouseenter', (e) => applyBlurEffect(e, index));
-            word.addEventListener('mouseleave', () => {
-                // Reset all words back to normal when mouse leaves
-                Array.from(words).forEach(word => word.classList.remove('blur-effect'));
+        // Add event listeners to each span
+        Array.from(spans).forEach((span, index) => {
+            span.addEventListener('mouseenter', () => applyBlurEffect(index));
+            span.addEventListener('mouseleave', () => {
+                Array.from(spans).forEach(span => span.classList.remove('blur-effect'));
             });
         });
     </script>

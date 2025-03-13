@@ -168,30 +168,35 @@
         }
 
         function copySignature() {
-            let signatureDiv = document.getElementById("signature");
+    let signatureDiv = document.getElementById("signature");
 
-            if (!signatureDiv) {
-                alert("No signature to copy.");
-                return;
-            }
+    if (!signatureDiv) {
+        alert("No signature to copy.");
+        return;
+    }
 
-            let clonedSignature = signatureDiv.cloneNode(true);
+    let clonedSignature = signatureDiv.cloneNode(true);
 
-            clonedSignature.style.background = 'transparent';
+    // Ensure the copied signature has a transparent background
+    clonedSignature.style.background = 'transparent';
+    clonedSignature.style.color = 'inherit'; // Ensures text color is not altered
 
-            let tempContainer = document.createElement("div");
-            tempContainer.appendChild(clonedSignature);
-            document.body.appendChild(tempContainer);
+    // Wrap in a <table> to improve Gmail compatibility
+    let tempContainer = document.createElement("div");
+    tempContainer.innerHTML = `<table style="border-collapse: collapse; background: transparent;"><tr><td>${clonedSignature.innerHTML}</td></tr></table>`;
 
-            let range = document.createRange();
-            range.selectNode(clonedSignature);
-            window.getSelection().removeAllRanges();
-            window.getSelection().addRange(range);
+    document.body.appendChild(tempContainer);
 
-            document.execCommand("copy");
+    let range = document.createRange();
+    range.selectNode(tempContainer);
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
 
-            document.body.removeChild(tempContainer);
-        }
+    document.execCommand("copy");
+
+    document.body.removeChild(tempContainer);
+}
+
     </script>
 </body>
 </html>
