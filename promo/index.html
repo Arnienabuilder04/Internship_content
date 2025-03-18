@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./assets/style.css">
+    <title>Invitation</title>
+    <style>
+
+:root {
+    --color-base: #000000;
+    --color-contrast: #ffffff;
+}
+* {
+    -webkit-appearance: none;
+}
+html {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    margin: 0;
+    padding: 0;
+    font-size: 3vmin;
+    overflow: hidden;
+    background-color: var(--color-base);
+    color: var(--color-contrast);
+}
+
+
+.Form {
+    
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: calc(100% - 4rem);
+    height: calc(100% - 4rem);
+    z-index: 2;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+.Form.is-active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: all;
+}
+
+.Form input {
+    width: 80%;
+    max-width: 12em;
+    background-color: transparent;
+    border: none;
+    color: var(--color-contrast);
+    font-weight: bold;
+    border-bottom: 0.2rem solid var(--color-contrast);
+    outline: none;
+    letter-spacing: 0.025em;
+    padding: 0.25em 0;
+    font-size: inherit;
+    line-height: 1.5em;
+    height: 1.5em;
+    border-radius: 0;
+}
+
+.Form input:-webkit-autofill,
+.Form input:-webkit-autofill:hover, 
+.Form input:-webkit-autofill:focus, 
+.Form input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px var(--color-base) inset !important;
+}
+
+.Form input:-webkit-autofill{
+    -webkit-text-fill-color: var(--color-contrast) !important;
+}
+
+.Form input::placeholder {
+    color: var(--color-contrast);
+    text-transform: uppercase;
+}
+
+.Form details {
+    width: 100%;
+    max-width: 12em;
+    /*margin-bottom: 0.25em;*/
+}
+
+.Form details + details {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.Form details[open] + details {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.Form summary {
+    font-weight: bold;
+    font-size: inherit;
+    letter-spacing: 0.025em;
+    cursor: pointer;
+    padding: 0.25em 0;
+    line-height: 1.5em;
+    height: 1.5em;
+    border-bottom: 0.2rem solid transparent;
+}
+
+.Form details[open] > summary {
+    display: none;
+}
+
+.Form summary::-webkit-details-marker,
+.Form summary::marker {
+    display: none;
+    content: '';
+}
+
+.Form input[type="submit"] {
+    text-align: left;
+    text-transform: uppercase;
+    border: none;
+    margin-top: 1em;
+    cursor: pointer;
+}
+
+.Form.is-sent input,
+.Form.is-sent details {
+    display: none;
+}
+
+.Form > p {
+    display: none;
+    font-size: inherit;
+    font-weight: bold;
+    letter-spacing: 0.025em;
+    text-transform: uppercase;
+    width: 100%;
+    max-width: 16em;
+    color: black;
+    text-align: center;
+}
+
+.Form.is-sent p {
+    display: inline-block;
+}
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #FFFFFF;
+            overflow: hidden;
+        }
+        video {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0; /* Start hidden */
+        }
+        #video2 {
+            pointer-events: none; /* Prevent video2 from blocking clicks */
+        }
+
+        /* Form styles */
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            border-radius: 10px;
+            gap: 2rem;
+
+            position: absolute;
+            top: 50%; /* Vertically center the form */
+            left: 50%; /* Horizontally center the form */
+            z-index: 2;
+            animation: slideIn 1s forwards; /* Slide-in animation */
+        }
+
+        /* Slide-in animation with opacity transition */
+        @keyframes slideIn {
+            0% {
+                right: -100%;
+                opacity: 0;
+            }
+            100% {
+                right: 0;
+                opacity: 1;
+            }
+        }
+
+       
+        
+    </style>
+</head>
+<body>
+    <video id="video1" autoplay muted playsinline src="./part_one.mp4"></video>
+    <video id="video2" playsinline src="./test.mp4" style="opacity: 0;"></video>
+
+        <form class="Form js-form">
+
+            <input type="text" name="name" placeholder="your name" required />
+            <input type="email" name="email" placeholder="your email" required />
+            <input type="phone" name="phone" placeholder="your number" required />
+    
+            <details>
+                <summary>+ Add friend</summary>
+                <input type="text" name="friend1_name" placeholder="your friends name" />
+            </details>
+            <details>
+                <summary>+ Add friend</summary>
+                <input type="text" name="friend2_name" placeholder="your friends name" />
+            </details>
+            <details>
+                <summary>+ Add friend</summary>
+                <input type="text" name="friend3_name" placeholder="your friends name" />
+            </details>
+    
+            <input type="submit" value="Send" />
+    
+            <p>Thank you<br/><br/>We will see you soon</p>
+    
+        </form>
+    <script src="app.js?v=19"></script>
+
+    <script>
+        console.log("Script loaded");
+
+        const video1 = document.getElementById('video1');
+        const video2 = document.getElementById('video2');
+        const formContainer = document.getElementById('formContainer');
+        let userHasClicked = false;
+        let video1Finished = false;
+
+        video1.addEventListener('play', () => {
+            console.log("Video 1 started");
+            video1.style.opacity = 1;
+        });
+
+        const handleClick = () => {
+            console.log('User clicked on video 1');
+            if (video1Finished) {
+                console.log("Video 1 already ended, starting video 2");
+                startVideo2();
+            } else {
+                console.log("User clicked while video 1 is playing");
+                userHasClicked = true;
+            }
+        };
+
+        video1.addEventListener('click', handleClick);
+
+        video1.addEventListener('ended', () => {
+            console.log("Video 1 ended");
+            video1Finished = true;
+            if (userHasClicked) {
+                console.log("User had clicked earlier, starting video 2");
+                startVideo2();
+            }
+        });
+
+        // Function to transition from video 1 to video 2
+        function startVideo2() {
+            console.log("Starting video 2...");
+            video2.style.opacity = 1; // Fade in video 2
+            video2.play();
+            video1.style.opacity = 0; // Fade out video 1
+
+            // Remove click event after switching
+            video1.removeEventListener('click', handleClick);
+
+            // When video 2 ends, show the form
+            video2.addEventListener('ended', () => {
+                console.log("Video 2 ended, freezing on last frame");
+                video2.pause();
+                showForm(); // Show form after video 2 ends
+            }, { once: true });
+        }
+
+        // Function to show the form
+        function showForm() {
+            const form = document.querySelector('.Form');
+            if (form) {
+                form.classList.add('is-active'); // Ensure it becomes visible
+            } else {
+                console.error("Form not found");
+            }
+        }
+
+        // Handle form submission
+        document.getElementById('sendBtn').addEventListener('click', () => {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const addFriend = document.getElementById('addFriend').checked;
+
+            console.log("Form submitted:", { name, email, phone, addFriend });
+            alert("Form submitted! Thank you.");
+            // You can handle form submission here (e.g., send to server)
+        });
+    </script>
+
+</body>
+</html>
