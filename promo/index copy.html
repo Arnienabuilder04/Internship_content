@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./assets/style.css">
+    <title>Invitation</title>
+    <style>
+        :root {
+            --color-base: #000000;
+            --color-contrast: #ffffff;
+        }
+        * {
+            -webkit-appearance: none;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: var(--color-contrast);
+            color: var(--color-contrast);
+            overflow: hidden;
+        }
+        video {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: filter 2s ease-in-out;
+        }
+        .blur {
+            filter: blur(10px);
+        }
+
+        /* Form styles */
+        .Form {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 2rem;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 1.5s ease-in-out, visibility 0s linear 1.5s;
+        }
+
+        .Form.is-active {
+            opacity: 1;
+            visibility: visible;
+            transition-delay: 0s;
+        }
+
+        .Form input {
+            height: fit-content;
+            width: 80%;
+            max-width: 12em;
+            background-color: transparent;
+            border: none;
+            color: var(--color-base);
+            font-weight: bold;
+            border-bottom: 2px solid var(--color-base);
+            outline: none;
+            letter-spacing: 0.025em;
+            padding: 0.25em 0;
+            font-size: 1rem;
+            line-height: 1.5em;
+            margin-bottom: 1rem;
+        }
+
+        .Form input::placeholder {
+            color: var(--color-base);
+            text-transform: uppercase;
+        }
+
+        .Form input[type="submit"] {
+            cursor: pointer;
+            background: var(--color-base);
+            color: var(--color-contrast);
+            padding: 0.5rem 1rem;
+            border: none;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <video id="video1" autoplay playsinline src="./test7.mp4"></video>
+
+    <form class="Form js-form">
+        <input type="text" name="name" placeholder="Your Name" required />
+        <input type="email" name="email" placeholder="Your Email" required />
+        <input type="phone" name="phone" placeholder="Your Number" required />
+        <input type="submit" value="Send" />
+        <p>Thank you!<br/>We will see you soon</p>
+    </form>
+
+    <script>
+const video1 = document.getElementById('video1');
+const form = document.querySelector('.Form');
+
+video1.addEventListener('loadedmetadata', () => {
+    const duration = video1.duration;
+    const blurStartTime = duration - 7; // Start blurring in last 7 seconds
+
+    video1.addEventListener('timeupdate', () => {
+        if (video1.currentTime >= blurStartTime) {
+            video1.classList.add('blur'); // Apply blur effect
+            form.classList.add('is-active'); // Show form when the blur starts
+        }
+    });
+
+    video1.addEventListener('ended', () => {
+        form.classList.add('is-active'); // Ensure the form is visible after video ends if not already
+    });
+});
+
+    </script>
+</body>
+</html>
