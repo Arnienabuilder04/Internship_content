@@ -76,6 +76,22 @@
             margin-bottom: 1rem;
         }
 
+        .friend-container {
+            width: 80%;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .friend-container input {
+            width: 100%;
+            display: block; /* Set the inputs to be block level */
+        }
+
+        .friend-container input.hidden {
+            display: none; /* Initially hide the extra friend inputs */
+        }
+
         .Form input::placeholder {
             color: var(--color-base);
             text-transform: uppercase;
@@ -91,24 +107,40 @@
             font-weight: bold;
         }
 
-        .overlay{
+        .overlay {
+            z-index: 4;
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            width: 100vw;
+            height: 100vh;
             background-color: rgba(0, 0, 0, 0.9);
             z-index: 1;
-
             display: grid;
             place-items: center;
         }
-        .start{
+
+        .start {
             font-size: 2rem;
             color: white;
             text-transform: uppercase;
             font-weight: bold;
             cursor: pointer;
+        }
+
+        /* Success message styling */
+        .success-message {
+            font-size: 2rem;
+            color: black;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .success-container {
+            z-index: 3;
+            position: absolute;
+            display: none;
+            width: 100%;
+            height: 100%;
+            place-items: center;
         }
     </style>
 </head>
@@ -116,42 +148,99 @@
     <div class="overlay">
         <p class="start">START</p>
     </div>
+
+    <div class="success-container" id="successContainer">
+        <p id="successMessage" class="success-message">SEE YOU THERE</p>
+    </div>
+
     <video id="video1" playsinline src="./test7.mp4"></video>
 
-    <form class="Form js-form">
+    <form class="Form is-active js-form">
         <input type="text" name="name" placeholder="Your Name" required />
         <input type="email" name="email" placeholder="Your Email" required />
         <input type="phone" name="phone" placeholder="Your Number" required />
+
+        <div class="friend-container">
+            <input type="text" name="friend1_name" class="add-friend" placeholder="Add Friend" />
+            <input type="text" name="friend2_name" class="add-friend hidden" placeholder="Add Friend" />
+            <input type="text" name="friend3_name" class="add-friend hidden" placeholder="Add Friend" />
+        </div>
+
         <input type="submit" value="Send" />
     </form>
 
     <script>
-const video1 = document.getElementById('video1');
-const form = document.querySelector('.Form');
+        document.addEventListener("DOMContentLoaded", function () {
+            const video1 = document.getElementById('video1');
+            const form = document.querySelector('.Form');
+            const overlay = document.querySelector('.overlay');
+            const start = document.querySelector('.start');
+            const friendInputs = document.querySelectorAll(".friend-container input");
+            
+            let friendCount = 1;
 
-const overlay = document.querySelector('.overlay');
-const start = document.querySelector('.start');
-overlay.addEventListener('click', () => {
-    video1.play();
-    overlay.style.display = 'none';
-});
+            overlay.addEventListener('click', () => {
+                video1.play();
+                overlay.style.display = 'none';
+            });
 
-video1.addEventListener('loadedmetadata', () => {
-    const duration = video1.duration;
-    const blurStartTime = duration - 7; 
+            video1.addEventListener('loadedmetadata', () => {
+                const duration = video1.duration;
+                const blurStartTime = duration - 7;
 
-    video1.addEventListener('timeupdate', () => {
-        if (video1.currentTime >= blurStartTime) {
-            video1.classList.add('blur'); 
-            form.classList.add('is-active'); 
-        }
-    });
+                video1.addEventListener('timeupdate', () => {
+                    if (video1.currentTime >= blurStartTime) {
+                        video1.classList.add('blur');
+                        form.classList.add('is-active');
+                    }
+                });
 
-    video1.addEventListener('ended', () => {
-        form.classList.add('is-active'); 
-    });
-});
+                video1.addEventListener('ended', () => {
+                    form.classList.add('is-active');
+                });
+            });
 
+            // Function to reveal the next friend input field
+            function revealNextFriend() {
+                if (friendCount < friendInputs.length) {
+                    friendInputs[friendCount].classList.remove('hidden');
+                    friendCount++;
+                }
+                friendInputs[friendCount - 1].addEventListener('input', revealNextFriend);
+            }
+            friendInputs[friendCount - 1].addEventListener('input', revealNextFriend);
+
+            document.querySelector(".js-form").addEventListener("submit", function(event) {
+                event.preventDefault();
+
+                const formData = new FormData(this);
+                const form = document.querySelector(".js-form");
+                const successContainer = document.getElementById("successContainer");
+
+                fetch("server.php", {
+                    method: "POST",
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.status === "success") {
+                        form.style.display = "none"; // Hide the form
+                        successContainer.style.display = "grid"; // Show success message
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("There was an error submitting the form.");
+                });
+            });
+        });
     </script>
 </body>
 </html>
