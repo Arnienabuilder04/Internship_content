@@ -154,7 +154,7 @@
         <p id="successMessage" class="success-message">SEE YOU THERE</p>
     </div>
 
-    <video id="video1" playsinline src="./test8.mp4"></video>
+    <video id="video1" playsinline src="./test11.mp4"></video>
 
     <form class="Form js-form">
         <input type="text" name="name" placeholder="Your Name" required />
@@ -187,7 +187,7 @@
 
             video1.addEventListener('loadedmetadata', () => {
                 const duration = video1.duration;
-                const blurStartTime = duration - 7;
+                const blurStartTime = duration - 5;
 
                 video1.addEventListener('timeupdate', () => {
                     if (video1.currentTime >= blurStartTime) {
