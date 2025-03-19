@@ -27,8 +27,9 @@
         video {
             position: absolute;
             width: 100%;
-            height: 100%;
+            height: 100%; 
             object-fit: cover;
+            object-position: bottom center;
             transition: filter 2s ease-in-out;
         }
         .blur {
@@ -153,7 +154,7 @@
         <p id="successMessage" class="success-message">SEE YOU THERE</p>
     </div>
 
-    <video id="video1" playsinline src="./test7.mp4"></video>
+    <video id="video1" playsinline src="./test8.mp4"></video>
 
     <form class="Form js-form">
         <input type="text" name="name" placeholder="Your Name" required />
@@ -200,7 +201,6 @@
                 });
             });
 
-            // Function to reveal the next friend input field
             function revealNextFriend() {
                 if (friendCount < friendInputs.length) {
                     friendInputs[friendCount].classList.remove('hidden');
@@ -229,8 +229,8 @@
                 })
                 .then(data => {
                     if (data.status === "success") {
-                        form.style.display = "none"; // Hide the form
-                        successContainer.style.display = "grid"; // Show success message
+                        form.style.display = "none"
+                        successContainer.style.display = "grid"; 
                     } else {
                         alert(data.message);
                     }
