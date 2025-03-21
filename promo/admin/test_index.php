@@ -4,7 +4,7 @@ header("Content-Type: application/json");
 
 // Get raw POST data
 $data = file_get_contents("php://input");
-print_r($data);
+
 // Decode JSON data into PHP array
 $formData = json_decode($data, true);
 
