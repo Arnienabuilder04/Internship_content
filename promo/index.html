@@ -166,7 +166,7 @@
 
     <video id="video1" playsinline src="./video_mankovsky.mp4"></video>
 
-    <form class="Form is-active  js-form">
+    <form class="Form is-active js-form" method="POST">
         <input type="text" name="name" placeholder="Your Name" required />
         <input type="email" name="email" placeholder="Your Email" required />
         <input type="phone" name="phone" placeholder="Your Number" required />
@@ -179,78 +179,6 @@
 
         <input type="submit" value="Send" />
     </form>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const video1 = document.getElementById('video1');
-            const form = document.querySelector('.Form');
-            const overlay = document.querySelector('.overlay');
-            const start = document.querySelector('.start');
-            const friendInputs = document.querySelectorAll(".friend-container input");
-            
-            let friendCount = 1;
-
-            overlay.addEventListener('click', () => {
-                video1.play();
-                overlay.style.display = 'none';
-            });
-
-            video1.addEventListener('loadedmetadata', () => {
-                const duration = video1.duration;
-                const blurStartTime = duration - 2;
-
-                video1.addEventListener('timeupdate', () => {
-                    if (video1.currentTime >= blurStartTime) {
-                        video1.classList.add('blur');
-                        form.classList.add('is-active');
-                    }
-                });
-
-                video1.addEventListener('ended', () => {
-                    form.classList.add('is-active');
-                });
-            });
-
-            function revealNextFriend() {
-                if (friendCount < friendInputs.length) {
-                    friendInputs[friendCount].classList.remove('hidden');
-                    friendCount++;
-                }
-                friendInputs[friendCount - 1].addEventListener('click', revealNextFriend);
-            }
-            friendInputs[friendCount - 1].addEventListener('click', revealNextFriend);
-
-            document.querySelector(".js-form").addEventListener("submit", function(event) {
-                event.preventDefault();
-
-                const formData = new FormData(this);
-                const form = document.querySelector(".js-form");
-                const successContainer = document.getElementById("successContainer");
-
-                fetch("server.php", {
-                    method: "POST",
-                    body: formData
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.status === "success") {
-                        form.style.display = "none"
-                        successContainer.style.display = "grid"; 
-                    } else {
-                        alert(data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error("Error:", error);
-                    alert("There was an error submitting the form.");
-                });
-            });
-        });
-    </script>
+    <script src="app.js"></script>
 </body>
 </html>
