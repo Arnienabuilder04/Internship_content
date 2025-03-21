@@ -1,5 +1,4 @@
 <?php
-
 $contentType = isset($_SERVER["CONTENT_TYPE"]) ? trim($_SERVER["CONTENT_TYPE"]) : '';
 
 if ( $contentType === "application/json" ) :
@@ -38,6 +37,7 @@ if ( $contentType === "application/json" ) :
     $htmlBody .= '<p style="font-size:1.75rem;line-height:1.25em;text-transform:uppercase;letter-spacing:0.0125em;font-weight:bold;">Welcome to the Premiere of<br/>Mankovsky Gallery Popup Space<br/><br/>Saturday 4th of March<br/>15:00 – 18:00<br/><br/><a href="https://goo.gl/maps/W48d49cqeZ28qnPe7" style="text-decoration:none;color:inherit;" target="_blank">Vallgatan 15<br/>Göteborg</a></p>';
     $htmlBody .= '<p style="font-size:1rem;line-height:1.25em;text-transform:uppercase;letter-spacing:0.0125em;font-weight:bold;">Jonatan Erlandsson<br/>Gallery Director<br/><a href="mailto:jonatan@mankovskygallery.com" style="text-decoration:none;color:inherit;">jonatan@mankovskygallery.com</a></p>';
     $htmlBody .= '</body></html>';
+    
     $data = array(
         'From' => 'rsvp@mankovskygallery.com',
         'To' => $decoded['email'],
@@ -47,8 +47,7 @@ if ( $contentType === "application/json" ) :
         'MessageStream' => 'outbound',
     );
     $post_data = json_encode($data);
-    debug_to_console($data);
-
+    
     $crl = curl_init('https://api.postmarkapp.com/email');
     curl_setopt($crl, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($crl, CURLINFO_HEADER_OUT, true);
