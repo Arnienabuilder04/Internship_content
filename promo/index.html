@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <title>Invitation</title>
     <style>
         :root {
@@ -12,24 +13,32 @@
         * {
             -webkit-appearance: none;
         }
+        html{
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+         }
         body {
+            
             font-family: Arial, Helvetica, sans-serif;
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            height: 100dvh;
             background-color: var(--color-contrast);
             color: var(--color-contrast);
             overflow: hidden;
+            background-color: black;
+
         }
         video {
-            position: absolute;
             width: 100%;
             height: 100%; 
             object-fit: cover;
-            object-position: bottom center;
+            object-position: center center;
             transition: filter 2s ease-in-out;
         } 
         .blur {
@@ -75,6 +84,7 @@
             font-size: 1rem;
             line-height: 1.5em;
             margin-bottom: 1rem;
+            border-radius: 0px;
         }
 
         .friend-container {
@@ -154,9 +164,9 @@
         <p id="successMessage" class="success-message">SEE YOU THERE</p>
     </div>
 
-    <video id="video1" playsinline src="./test11.mp4"></video>
+    <video id="video1" playsinline src="./video_mankovsky.mp4"></video>
 
-    <form class="Form js-form">
+    <form class="Form is-active  js-form">
         <input type="text" name="name" placeholder="Your Name" required />
         <input type="email" name="email" placeholder="Your Email" required />
         <input type="phone" name="phone" placeholder="Your Number" required />
@@ -187,7 +197,7 @@
 
             video1.addEventListener('loadedmetadata', () => {
                 const duration = video1.duration;
-                const blurStartTime = duration - 5;
+                const blurStartTime = duration - 2;
 
                 video1.addEventListener('timeupdate', () => {
                     if (video1.currentTime >= blurStartTime) {
@@ -206,9 +216,9 @@
                     friendInputs[friendCount].classList.remove('hidden');
                     friendCount++;
                 }
-                friendInputs[friendCount - 1].addEventListener('input', revealNextFriend);
+                friendInputs[friendCount - 1].addEventListener('click', revealNextFriend);
             }
-            friendInputs[friendCount - 1].addEventListener('input', revealNextFriend);
+            friendInputs[friendCount - 1].addEventListener('click', revealNextFriend);
 
             document.querySelector(".js-form").addEventListener("submit", function(event) {
                 event.preventDefault();
