@@ -85,7 +85,7 @@ if ( form ) {
             friend3_name: friend3_name
         };
 
-        postData('./admin/test_index.php', insertData)
+        postData('./admin/upload.php', insertData)
             .then((data) => {
                 console.log(data); // JSON data parsed by `data.json()` call
             });
