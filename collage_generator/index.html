@@ -12,7 +12,6 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
         }
         .container {
             display: grid;
@@ -65,9 +64,9 @@
     const container = document.querySelector(".container");
     const images = container.querySelectorAll(".image");
 
-    const gridFormat = 1; // 1 = checkerboard, 0 = regular grid (how the elements should be placed on the page)
-    const paramOffsetX = 50; // 0 - 200 (how much offset the images should have on the X-axis)
-    const paramOffsetY = 50; // 0 - 200 (how much offset the images should have on the Y-axis)
+    const gridFormat = 0; // 1 = checkerboard, 0 = regular grid (how the elements should be placed on the page)
+    const paramOffsetX = 20; // 0 - 200 (how much offset the images should have on the X-axis)
+    const paramOffsetY = 20; // 0 - 200 (how much offset the images should have on the Y-axis)
     const paramScale = 0.5; // 0 - 2 (how much the images should be scaled)
 
     const boxAspectRatio = "1 / 1"; // 1 / 1 (aspect ratio of the images)
@@ -80,44 +79,77 @@
 
 
     const grid = [
-        { "max-width": 760, "columns": 2, "rows": 2 }, 
+        { "max-width": 760, "columns": 2}, 
         { "max-width": 1280, "columns": 3 , "rows": 3 }, 
-        { "max-width": 1660, "columns": 4 , "rows": 2 }, 
-        { "max-width": 1920, "columns": 6, "rows": 1 }, 
-        { "max-width": 2560, "columns": 4 , "rows": 4 }, 
+        { "max-width": 1660, "columns": 4}, 
+        { "max-width": 1920, "columns": 6, "rows": 5 }, 
+        { "max-width": 2560, "columns": 6 , "rows": 4 }, 
         { "max-width": 3840, "columns": 8, "rows": 1 }
     ];
+    
 
     windowWidth = window.innerWidth * (parseFloat(ContainerWidth) / 100);
 
-    function updateGrid() {
+   function updateGrid() {
     let gridWidth = container.clientWidth ? container.clientWidth : windowWidth;
     let selectedConfig = grid.find(g => gridWidth <= g["max-width"]) || grid[grid.length - 1];
     let columns = selectedConfig.columns;
-    let rows = selectedConfig.rows;
-    let maxImages = columns * rows; 
+    let rows = selectedConfig.rows || "auto"; // Use predefined rows if available
 
-    container.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
-    container.style.gap = `${GapYaxis} ${GapXaxis}`;
-    container.style.width = ContainerWidth;
-    container.style.height = ContainerHeight;
+    let numImages = images.length;
+    let calculatedRows = Math.floor(numImages / columns); // Count only full rows
+    let remainingImages = numImages % columns;
 
-    if (rows) {
-        container.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
-    } else {
-        container.style.gridAutoRows = "1fr"; 
+    // If `rows` is explicitly set, use it. Otherwise, ensure only full rows
+    if (rows === "auto") {
+        rows = calculatedRows; // Remove incomplete row
     }
 
+    let finalImageCount = rows * columns; // Ensure only full rows are visible
+
+    container.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
+    container.style.gridTemplateRows = rows === "auto" ? "auto" : `repeat(${rows}, 1fr)`;
+    container.style.gap = `${GapYaxis} ${GapXaxis}`;
+    container.style.width = ContainerWidth;
+    container.style.height = "auto"; // Ensure dynamic resizing
+
     images.forEach((img, index) => {
-        if (index < maxImages) {
+        if (index < (finalImageCount)) {
             img.parentElement.style.display = "flex";
         } else {
             img.parentElement.style.display = "none";
         }
     });
 
+    if (finalImageCount > images.length) {
+        console.log('now')
+        let extraRows = Math.ceil((finalImageCount - images.length) / columns);
+        rows = rows - extraRows; // Reduce the number of rows
+        container.style.gridTemplateRows = `repeat(${rows}, 1fr)`; // Update grid rows
+
+        images.forEach((img, index) => {
+        if (index < (finalImageCount-columns)) {
+            img.parentElement.style.display = "flex";
+        } else {
+            console.log('index', index)
+            img.parentElement.style.display = "none";
+        }
+    });
+    }
+
+    console.log('finalImageCount', finalImageCount)
+    console.log('images.length', images.length)
+    console.log('actual needed images', finalImageCount - columns)
+
+   
+
+    // Hide the grid if no images are left
+    container.style.display = finalImageCount === 0 ? "none" : "grid";
+
     repositionImages(columns);
 }
+
+
 
 
     function repositionImages(columns) {
