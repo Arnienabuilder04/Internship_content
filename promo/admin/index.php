@@ -57,7 +57,6 @@ if ( $contentType === "application/json" ) :
     curl_setopt($crl, CURLOPT_HTTPHEADER, array(
         'Accept: application/json',
         'Content-Type: application/json',
-        'X-Postmark-Server-Token: e174f893-50d5-4292-a65c-e63f24e47ba1'
     ));
     
     $result = curl_exec($crl);
